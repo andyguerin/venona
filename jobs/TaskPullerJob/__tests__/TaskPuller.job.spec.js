@@ -95,17 +95,17 @@ describe('TaskPullerJob unit tests', () => {
 				type: 'CreatePod',
 			}
 		];
-		DeletePodTask.mockImplementationOnce(() => ({
+		CreatePodTask.mockImplementationOnce(() => ({
 			exec: jest.fn(async () => Promise.reject('error'))	
 		}));
-		CreatePodTask.mockImplementationOnce(() => ({
+		DeletePodTask.mockImplementationOnce(() => ({
 			exec: jest.fn(async () => Promise.resolve('value'))	
 		}));
 		const logger = createLogger();
 		const task = new TaskPullerJob({
 			pullTasks: jest.fn().mockResolvedValue(tasks),
 		}, _.noop(), logger);
-		return expect(task.exec()).resolves.toEqual(['value', undefined]);
+		return expect(task.exec()).resolves.toEqual([undefined, 'value']);
 	});
 
 	it('Should not fail when task failed', () => {
